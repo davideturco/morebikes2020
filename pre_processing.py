@@ -2,6 +2,30 @@ import pandas as pd
 import numpy as np
 from sklearn.impute import SimpleImputer
 from sklearn.feature_selection import VarianceThreshold
+from datetime import datetime
+
+
+################################
+## Utils
+################################
+
+def has_nan(dataframe):
+    """
+    Return true if dataframe has missing values (e.g. NaN) and counts how many missing value each feature has
+    """
+    is_nan = dataframe.isnull().values.any()
+    no_nan = dataframe.isnull().sum()
+    return is_nan, no_nan
+
+
+def get_time(timestamp):
+    """
+    Returns UTC (classic) time from UNIX timestamp
+    """
+    time = datetime.utcfromtimestamp(timestamp)
+    year, month, day, hour, minute = time.year, time.month, time.day, time.hour, time.minute
+
+    return year, month, day, hour, minute
 
 
 def day_transform(dataset):
