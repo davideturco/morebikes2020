@@ -28,6 +28,14 @@ def get_time(timestamp):
     return year, month, day, hour, minute
 
 
+def drop_nan_bikes(dataset):
+    """
+    Drops rows where there is a null value for bikes (e.g. NaN)
+    """
+    new_dataset = dataset.drop(dataset[dataset['bikes'].isnull()].index)
+    return new_dataset
+
+
 def day_transform(dataset):
     """
     Function that replaces strings of weekdays with a numerical equivalent.
@@ -53,8 +61,6 @@ def var_transform(dataset, threshold=0.0):
     """
     Function that removes features with variance below a certain threshold (default: threshold=0)
     """
-    # if threshold is None:
-    #     threshold = 0.0
     selector = VarianceThreshold(threshold)
     selector.fit_transform(dataset)
     new_dataset = dataset[dataset.columns[selector.get_support(indices=True)]]
