@@ -1,4 +1,5 @@
 import pandas as pd
+import glob
 import numpy as np
 from sklearn.impute import SimpleImputer
 from sklearn.feature_selection import VarianceThreshold
@@ -8,6 +9,26 @@ from datetime import datetime
 ################################
 ## Utils
 ################################
+
+def load_individual(path):
+    """
+    Loads all the csv files in a given directory and store them in a list of separate dataframes
+    """
+    df = []
+    for file in glob.glob(path + "/*.csv"):
+        dataframe = pd.read_csv(file)
+        df.append(dataframe)
+    return df
+
+
+def load_general(path):
+    """
+    Loads all the csv files in a given directory and concatenate them into a single datafram
+    """
+    df = load_individual(path)
+    general_df = pd.concat(df, ignore_index=True)
+    return general_df
+
 
 def has_nan(dataframe):
     """
@@ -47,7 +68,7 @@ def day_transform(dataset):
     return transformed
 
 
-def nan_imputer(dataset):
+def nan_impute(dataset):
     """
     Function that replaces all the NaN appearing in the dataset with the median value along each column.
     """
