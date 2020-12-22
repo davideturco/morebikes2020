@@ -36,7 +36,8 @@ def has_nan(dataframe):
     """
     is_nan = dataframe.isnull().values.any()
     no_nan = dataframe.isnull().sum()
-    return is_nan, no_nan
+    is_infinite = np.all(np.isfinite(dataframe))
+    return is_nan, no_nan, is_infinite
 
 
 def get_time(timestamp):
@@ -62,11 +63,11 @@ def day_transform(dataset):
     Function that replaces strings of weekdays with a numerical equivalent.
     """
 
-    transformed = dataset.replace(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-                                  [1, 2, 3, 4, 5, 6, 7], inplace=True)
+    dataset = dataset.replace(
+        ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+        [1, 2, 3, 4, 5, 6, 7])
 
-    return transformed
-
+    return dataset
 
 def nan_impute(dataset):
     """
