@@ -1,7 +1,7 @@
 import pandas as pd
 import glob
 import numpy as np
-from sklearn.impute import SimpleImputer
+from sklearn.impute import SimpleImputer, KNNImputer
 from sklearn.feature_selection import VarianceThreshold
 from datetime import datetime
 
@@ -36,8 +36,8 @@ def has_nan(dataframe):
     """
     is_nan = dataframe.isnull().values.any()
     no_nan = dataframe.isnull().sum()
-    is_infinite = np.all(np.isfinite(dataframe))
-    return is_nan, no_nan, is_infinite
+    # is_infinite = np.all(np.isfinite(dataframe))
+    return is_nan, no_nan  # , is_infinite
 
 
 def get_time(timestamp):
@@ -69,11 +69,13 @@ def day_transform(dataset):
 
     return dataset
 
+
 def nan_impute(dataset):
     """
     Function that replaces all the NaN appearing in the dataset with the median value along each column.
     """
-    replacer = SimpleImputer(missing_values=np.nan, strategy='median')
+    # replacer = SimpleImputer(missing_values=np.nan, strategy='mean')
+    replacer = KNNImputer(missing_values=np.nan, n_neighbors=5, weights='distance')
     new_dataset = pd.DataFrame(replacer.fit_transform(dataset), columns=dataset.columns)
 
     return new_dataset
