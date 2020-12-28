@@ -74,7 +74,7 @@ def nan_impute(dataset):
     """
     Function that replaces all the NaN appearing in the dataset with the median value along each column.
     """
-    # replacer = SimpleImputer(missing_values=np.nan, strategy='mean')
+    #replacer = SimpleImputer(missing_values=np.nan, strategy='median')
     replacer = KNNImputer(missing_values=np.nan, n_neighbors=5, weights='distance')
     new_dataset = pd.DataFrame(replacer.fit_transform(dataset), columns=dataset.columns)
 
