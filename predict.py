@@ -8,17 +8,18 @@ PATH_TO_SUBMISSION = './predictions.csv'
 
 
 def load_model():
-    model = load('randomforest.joblib')
+    model = load('lgb.joblib')
     return model
 
 
 def preprocess_data():
     dataframe = pd.read_csv(PATH_TO_DATA)
-    dataframe = day_transform(dataframe)
+    # dataframe = day_transform(dataframe)
+    dataframe = pd.get_dummies(dataframe, columns=['weekday'])
     dataframe = var_transform(dataframe)
     # to_drop = high_correl(dataframe, 0.95)
     id_dataframe = dataframe['Id']
-    dataframe = dataframe.drop(['Id', 'year', 'month', 'relHumidity.HR', 'day', 'weekhour', 'windMeanSpeed.m.s',
+    dataframe = dataframe.drop(['Id', 'year', 'month', 'relHumidity.HR', 'day', 'windMeanSpeed.m.s',
                                 'short_profile_3h_diff_bikes', 'short_profile_bikes'], axis=1)
 
     scaler = load('scaler.joblib')
