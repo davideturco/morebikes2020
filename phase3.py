@@ -1,6 +1,4 @@
-import pandas as pd
-from pre_processing import *
-from feature_selection import *
+from data_upload import *
 from sklearn.linear_model import Ridge
 from sklearn.metrics import mean_absolute_error
 from sklearn.model_selection import train_test_split
@@ -13,18 +11,6 @@ MODELS = {'short': 'short_averaged.csv',
           'short_full_temp': 'short_full_temp_averaged.csv'
 
           }
-
-
-def prepare_general_dataset():
-    df = load_general('Train/Train')
-    df = drop_nan_bikes(df)
-    df = pd.get_dummies(df, columns=['weekday'])
-    df = var_transform(df)
-    df = nan_impute(df)
-
-    df.to_csv('df.csv', index=False)
-
-    return df
 
 
 def prepare_model(model_path):
@@ -42,7 +28,7 @@ def prepare_model(model_path):
 
 
 def fit_ridge(train_x, train_y):
-    model = Ridge()
+    model = Ridge(alpha=0.01)
     model.fit(train_x, train_y)
     return model.intercept_, model.coef_
 
