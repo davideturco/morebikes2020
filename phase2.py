@@ -31,7 +31,7 @@ def plot_scores_1(scores):
     plt.show()
 
 
-def plot_scores_2(scores):
+def plot_scores_2(scores, mean):
     x = np.arange(0, len(scores[1][1]))
     plt.xlabel('Station')
     plt.ylabel('MAE')
@@ -41,9 +41,12 @@ def plot_scores_2(scores):
     plt.plot(x, scores[3][1], label=scores[3][0])
     plt.plot(x, scores[4][1], label=scores[4][0])
     plt.plot(x, scores[5][1], label=scores[5][0])
+    hor_line = np.array([mean for i in x])
+    plt.plot(x, hor_line, 'c--', label='Mean')
     plt.xticks(np.arange(0, 75, 3), np.arange(201, 276, 3), rotation=45)
     plt.legend()
-    plt.show()
+    plt.tight_layout()
+    plt.savefig('individual_stations.eps')
 
 
 def get_averaged_models():
@@ -75,16 +78,18 @@ def evaluate_models_2():
     """Evaluate the 6 averaged models on each of the 75 stations in the training set and plot the mean absolute
     errors """
     df = prepare_individual_datasets()
+    get_averaged_models()
     scores = []
+    mean_plot = []
     print("Starting evaluation...")
     for model in glob.glob('*_averaged.csv'):
         averaged_model = pd.read_csv(model)
-        features = averaged_model['feature']
+        featuress = averaged_model['feature']
 
         # weights
         intercept = averaged_model['weight'].values[0]
         weights = averaged_model['weight'][1:]
-        features_used = features.values[1:]
+        features_used = featuress.values[1:]
         # reindex to perform series multiplication
         weights.index = features_used
 
@@ -97,8 +102,11 @@ def evaluate_models_2():
             temp_scores.append(mean_absolute_error(predictions, Y))
         name = model.split('_averaged')[0]
         scores.append((name, temp_scores))
-        print(f'Accuracy of model {name} is {mean(temp_scores)}\n')
-    plot_scores_2(scores)
+        mean_score = mean(temp_scores)
+        print(f'Accuracy of model {name} is {mean_score}\n')
+        mean_plot.append(mean_score)
+    plot_scores_2(scores, mean(mean_plot))
+    print(mean(mean_plot))
 
 
 def evaluate_models_1():
@@ -142,5 +150,4 @@ def evaluate_models_1():
 
 
 if __name__ == '__main__':
-    # get_averaged_models()
-    evaluate_models_1()
+    evaluate_models_2()

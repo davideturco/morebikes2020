@@ -45,7 +45,6 @@ def integrated_model(X, intercept, coefficients):
 
 
 def main():
-    # TODO: maybe try to tune Ridge()
     df = prepare_general_dataset()
     df_train, df_test = train_test_split(df)
 

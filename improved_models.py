@@ -47,7 +47,7 @@ if __name__ == '__main__':
     #X_test = X_test.filter(items=features_used)
     Y_test = df_test['bikes']
 
-    model = ImprovedLinearRegressor(model='short_full')
+    model = ImprovedLinearRegressor(model_name='short_full')
     model.fit(X_train,Y_train)
 
     predictions = model.predict(X_test)
